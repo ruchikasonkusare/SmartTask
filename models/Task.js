@@ -1,0 +1,71 @@
+const mongoose = require('mongoose');
+
+const TaskSchema = new mongoose.Schema({
+    title:{
+        type:String,
+        required:true,
+        trim:true,
+    },
+    description:{
+        type:String,
+        default:"",
+    },
+    column:{
+        type:mongoose.Schema.Types.ObjectId,
+    },
+    board:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Board',
+    },
+    assignee:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+    },
+    priority:{
+        type:String,
+        enum:['low','medium','high'],
+        default:'medium',
+    },
+    dueDate:{
+        type:Date,
+    },
+    order:{
+        type:Number,
+        default:0,
+    },
+    labels:[
+        {
+            type:String
+        }
+    ],
+    attachments:[
+        {
+            filename:{
+                type:String,
+                required:true,
+            },
+            url:{
+                type:String,
+                required:true,
+            }
+        }
+    ],
+    comments:[
+        {
+            user:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'User',
+            },
+            text:{
+                type:String,
+                required:true,
+            },
+            createdAt:{
+                type:Date,
+                default:Date.now,
+            }
+        }
+    ],
+},{timestamps:true})
+
+module.exports = mongoose.model('Task',TaskSchema);
